@@ -7,13 +7,23 @@
 <meta name="robots" content="noindex">
 <link rel="canonical" href="https://padelio.funkyfridays.co.za/">
 <script>
-  // Americano Padel now lives at Padelio. Send people there until the cut-off,
-  // after which this page only shows the link.
-  (function () {
-    var TARGET = 'https://padelio.funkyfridays.co.za/';
-    var UNTIL = Date.UTC(2026, 9, 29); // 29 October 2026
-    if (Date.now() < UNTIL) location.replace(TARGET);
-  })();
+  // Americano Padel now lives at Padelio. Until the cut-off, give people five
+  // seconds to read the notice, then send them there; after it, only the link.
+  var TARGET = 'https://padelio.funkyfridays.co.za/';
+  var UNTIL = Date.UTC(2026, 9, 29); // 29 October 2026
+  var WAIT = 5;
+  if (Date.now() < UNTIL) {
+    document.addEventListener('DOMContentLoaded', function () {
+      var left = WAIT, el = document.getElementById('countdown');
+      el.hidden = false;
+      var tick = function () {
+        if (left <= 0) { location.replace(TARGET); return; }
+        el.textContent = 'Taking you there in ' + left + ' second' + (left === 1 ? '' : 's') + '…';
+        left--; setTimeout(tick, 1000);
+      };
+      tick();
+    });
+  }
 </script>
 <style>
   :root { --bg: #f6f7f9; --fg: #16181d; --muted: #5d6470; --accent: #1f6feb; }
@@ -26,6 +36,8 @@
   main { max-width: 420px; text-align: center; }
   h1 { font-size: 24px; margin: 0 0 8px; }
   p { color: var(--muted); margin: 0 0 20px; }
+  p.note { color: var(--fg); }
+  p.small { font-size: 14px; margin: 16px 0 0; }
   a.btn { display: inline-block; background: var(--accent); color: #fff; text-decoration: none;
           font-weight: 600; padding: 12px 22px; border-radius: 999px; }
 </style>
@@ -34,7 +46,9 @@
 <main>
   <h1>Americano Padel has moved</h1>
   <p>It is now <b>Padelio</b>. Update your bookmark or home-screen icon.</p>
+  <p class="note">Padelio needs a sign-in. <b>Request a login from rudivdm.</b></p>
   <a class="btn" href="https://padelio.funkyfridays.co.za/">Go to padelio.funkyfridays.co.za</a>
+  <p id="countdown" class="small" aria-live="polite" hidden></p>
 </main>
 </body>
 </html>
